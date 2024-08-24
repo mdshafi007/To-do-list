@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #00cec9;
+            --accent-color: #fd79a8;
+            --background-color: #f9f9f9;
+            --card-background-color: #ffffff;
+            --text-color: #2d3436;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --transition-duration: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffffff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ffffff;
+            opacity: 0.9;
+        }
+
+        .task-form {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        #task-input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            transition: border-color var(--transition-duration) ease;
+        }
+
+        #task-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        #add-task {
+            padding: 12px 25px;
+            font-size: 16px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: #fff;
+            border: none;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            cursor: pointer;
+            transition: opacity var(--transition-duration) ease;
+        }
+
+        #add-task:hover {
+            opacity: 0.9;
+        }
+
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color var(--transition-duration) ease;
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .task-list {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            transition: all var(--transition-duration) ease;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-item:hover {
+            background-color: rgba(248, 249, 250, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-checkbox {
+            margin-right: 15px;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .task-checkbox:checked::after {
+            content: '\2714';
+            font-size: 14px;
+            color: var(--primary-color);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .task-text {
+            flex-grow: 1;
+            font-size: 1rem;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .task-actions button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-color);
+            opacity: 0.6;
+            transition: opacity var(--transition-duration) ease;
+        }
+
+        .task-actions button:hover {
+            opacity: 1;
+        }
+
+        .completed .task-text {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .input-group {
+                flex-direction: column;
+            }
+
+            #task-input,
+            #add-task {
+                width: 100%;
+                border-radius: var(--border-radius);
+            }
+
+            #task-input {
+                margin-bottom: 10px;
+            }
+
+            .filter-container {
+                flex-wrap: wrap;
+            }
+
+            .filter-btn {
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>To Do List Application</h1>
+        </header>
+        <form id="task-form" class="task-form">
+            <div class="input-group">
+                <input type="text" id="task-input" placeholder="What needs to be done?" required>
+                <button type="submit" id="add-task">Add Task</button>
+            </div>
+        </form>
+        <div class="filter-container">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="pending">Pending</button>
+            <button class="filter-btn" data-filter="completed">Completed</button>
+        </div>
+        <div id="task-list" class="task-list"></div>
+    </div>
+
+    <script>
+        const taskForm = document.getElementById('task-form');
+        const taskInput = document.getElementById('task-input');
+        const taskList = document.getElementById('task-list');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let currentFilter = 'all';
+
+        function renderTasks() {
+            taskList.innerHTML = '';
+            const filteredTasks = filterTasks(tasks, currentFilter);
+            filteredTasks.forEach((task, index) => {
+                const taskItem = document.createElement('div');
+                taskItem.className = `task-item ${task.completed ? 'completed' : ''}`;
+                taskItem.innerHTML = `
+                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} onchange="toggleComplete(${index})">
+                    <span class="task-text">${task.text}</span>
+                    <div class="task-actions">
+                        <button onclick="editTask(${index})"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteTask(${index})"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                `;
+                taskList.appendChild(taskItem);
+            });
+            saveTasks();
+        }
+
+        function filterTasks(tasks, filter) {
+            switch (filter) {
+                case 'completed':
+                    return tasks.filter(task => task.completed);
+                case 'pending':
+                    return tasks.filter(task => !task.completed);
+                default:
+                    return tasks;
+            }
+        }
+
+        function addTask(text) {
+            const newTask = { text, completed: false };
+            tasks.push(newTask);
+            renderTasks();
+            const newTaskElement = taskList.lastElementChild;
+            newTaskElement.style.animation = 'fadeIn 0.5s ease';
+        }
+
+        function toggleComplete(index) {
+            tasks[index].completed = !tasks[index].completed;
+            renderTasks();
+        }
+
+        function editTask(index) {
+            const newText = prompt('Edit task:', tasks[index].text);
+            if (newText !== null) {
+                tasks[index].text = newText.trim();
+                renderTasks();
+            }
+        }
+
+        function deleteTask(index) {
+            const taskElement = taskList.children[index];
+            taskElement.style.animation = 'fadeOut 0.5s ease';
+            taskElement.addEventListener('animationend', () => {
+                tasks.splice(index, 1);
+                renderTasks();
+            });
+        }
+
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        taskForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = taskInput.value.trim();
+            if (text) {
+                addTask(text);
+                taskInput.value = '';
+            }
+        });
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                currentFilter = button.getAttribute('data-filter');
+                renderTasks();
+            });
+        });
+
+        renderTasks();
+    </script>
+</body>
+
+</html>
